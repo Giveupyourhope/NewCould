@@ -60,6 +60,14 @@ MakeMetricServiceStub() {
   return google::monitoring::v3::grpc::MetricService::NewStub(channel);
 }
 
+// Decide whether to enable StackdriverExporter
+std::string GetStackdrivserProjectIdFromEnv() {
+  std::string project_id;
+  TF_CHECK_OK(ReadStringFromEnvVar("TF_MONITORING_STACKDRIVER_PROJECT_ID",
+                                   /* default */ "", &project_id));
+  return project_id;
+}
+
 void ConvertTimestamp(absl::Time ts, google::protobuf::Timestamp* proto) {
   const int64 sec = absl::ToUnixSeconds(ts);
   proto->set_seconds(sec);
